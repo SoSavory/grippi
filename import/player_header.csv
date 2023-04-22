@@ -1,0 +1,1 @@
+team:int,stocks:int,costume,character,consciousness,ucf_dash_back,ucf_shield_drop,portNum:int,playerId:ID(Player),:LABEL

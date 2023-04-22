@@ -1,0 +1,31 @@
+# needs a created 7474 id user for running scripts with neo4j-importer
+services:
+  neo4j:
+    image: neo4j
+    ports:
+      - 7474:7474
+      - 7687:7687
+    depends_on:
+      neo4j-importer:
+        condition: service_completed_successfully
+    volumes:
+      - ./data:/data
+  neo4j-importer:
+    build: ./neo4j-importer
+    user: 7474:7474
+    depends_on:
+      - python-parser
+    volumes:
+      - ./import:/var/lib/neo4j/import:rw
+      - ./data:/data:rw
+      - ./bash-scripts/hash-poll.sh:/var/lib/neo4j/hash-poll.sh:rw
+      - ./neo4j-importer/imports-hash:/var/lib/neo4j/imports-hash:rw
+    command: bash /var/lib/neo4j/hash-poll.sh /var/lib/neo4j/import /var/lib/neo4j/imports-hash 'neo4j-admin database import full --nodes=/var/lib/neo4j/import/game_header.csv,/var/lib/neo4j/import/nodes/games/\.*\.csv --nodes=/var/lib/neo4j/import/port_header.csv,/var/lib/neo4j/import/nodes/ports/\.*\.csv --nodes=/var/lib/neo4j/import/player_header.csv,/var/lib/neo4j/import/nodes/players/\.*\.csv --relationships=/var/lib/neo4j/import/rel_header.csv,/var/lib/neo4j/import/rels/\.*\.csv --overwrite-destination'
+  python-parser:
+    build: ./python-parser
+    volumes:
+      - ./slp_zips_here:/zips:rw
+      - ./import:/import:rw
+      - ./bash-scripts/hash-poll.sh:/hash-poll.sh:rw
+      - ./python-parser/zips-hash:/zips-hash:rw
+    command: [ "bash", "/hash-poll.sh", "/zips", "/zips-hash", 'python3 -u /slp2csv.py']

@@ -1,0 +1,1 @@
+pal:boolean,stage,teams:boolean,frozenPS:boolean,numFrames:int,gameId:ID(Game),:LABEL

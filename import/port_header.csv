@@ -1,0 +1,1 @@
+posX:float,posy:float,jumps:int,state,stocks:int,shield:float,damage:float,ground,hitStun:float,lCancel,airborne:boolean,stateAge:float,direction,lastHitBy,comboCount:int,lastAttackLanded,portId:ID(Port),frame:int,:LABEL
